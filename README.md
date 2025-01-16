@@ -1,50 +1,55 @@
-System Design for ReactJS
+# React + TypeScript + Vite
 
-This repository aims to provide a structured approach to system design in the context of building ReactJS applications. It covers various architectural patterns, performance optimization techniques, and best practices to ensure your React applications are scalable, maintainable, and efficient.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Table of Contents
-Introduction
-ReactJS Architecture Overview
-Component Design Principles
-State Management
-Routing & Navigation
-Performance Optimization
-License
+Currently, two official plugins are available:
 
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Introduction
-ReactJS has become one of the most popular JavaScript libraries for building user interfaces, especially for single-page applications (SPAs). System design for ReactJS involves structuring your app to ensure scalability, maintainability, and performance. This repository provides insights and guidelines for designing ReactJS applications with these goals in mind.
+## Expanding the ESLint configuration
 
-ReactJS Architecture Overview
-React follows a component-based architecture, which allows developers to build applications by composing reusable UI elements. Here’s a high-level overview of the key architectural aspects of a React application:
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-Component-Based Architecture: React apps are built by combining components that represent different parts of the UI. Components can be reusable and stateful or stateless.
+- Configure the top-level `parserOptions` property like this:
 
-Unidirectional Data Flow: Data in React flows in one direction, from parent to child components. This makes it easier to manage state and understand how data changes in an application.
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-JSX Syntax: React uses JSX (JavaScript XML), which allows HTML to be written within JavaScript code, providing an easier and more intuitive way to define UI components.
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-Learning Resources
-To further your knowledge of ReactJS system design, explore the following resources:
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-React Official Documentation: The go-to resource for learning all about ReactJS.
-React Docs
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
+The project is divided into smaller parts (components):
 
-Books:
-
-"Learning React" by Alex Banks and Eve Porcello
-"React Design Patterns and Best Practices" by Michele Bertoli
-Courses:
-
-React for Beginners by Wes Bos
-Fullstack Open
-Contributing
-We welcome contributions to this repository! If you would like to contribute, feel free to:
-
-Open an issue to discuss new ideas or improvements.
-Submit a pull request for bug fixes, enhancements, or additional resources.
-Please follow the contributing guidelines when making contributions.
-
-License
-This repository is licensed under the MIT License. You are free to use, modify, and distribute the content, but please provide appropriate credit.
-
+SearchBar.js: A text box and a button to enter the city name and search.
+WeatherCard.js: Displays the fetched weather details.
+App.js: Combines everything and manages the app’s logic.
